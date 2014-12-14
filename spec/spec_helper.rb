@@ -76,10 +76,10 @@ e Kernel.srand config.seed
 =end
 end
 
-def json_response(hash)
+def json_response(hash, options = {})
   {
     :body => hash.to_json,
     :headers => {'Content-Type' => 'application/json' }
-  }
+  }.merge(options)
 
 end

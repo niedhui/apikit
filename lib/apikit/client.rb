@@ -6,6 +6,8 @@ module Apikit
       @api_endpoint = api_endpoint
     end
 
+    # options:
+    #   query:
     def get(path, options = {})
       request :get, path, options
     end
@@ -30,8 +32,17 @@ module Apikit
     private
 
     def agent
-      @agent ||= Sawyer::Agent.new(api_endpoint) do |http|
+      @agent ||= Sawyer::Agent.new(api_endpoint, sawyer_options) do |http|
         http.headers[:content_type] = "application/json"
+      end
+    end
+
+    def sawyer_options
+      {}.tap do |opts|
+        opts[:faraday] = Faraday.new do |conn|
+          #conn.use Faraday::Response::RaiseError
+          conn.adapter Faraday.default_adapter
+        end
       end
     end
 
