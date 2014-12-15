@@ -1,9 +1,11 @@
 module Apikit
   class Client
-    attr_accessor :api_endpoint
+    attr_accessor :api_endpoint, :config
 
-    def initialize(api_endpoint)
+    # options:
+    def initialize(api_endpoint, config = Apikit.config )
       @api_endpoint = api_endpoint
+      @config = config
     end
 
     # options:
@@ -40,7 +42,7 @@ module Apikit
     def sawyer_options
       {}.tap do |opts|
         opts[:faraday] = Faraday.new do |conn|
-          #conn.use Faraday::Response::RaiseError
+          config.faraday_options.call(conn) if config.faraday_options
           conn.adapter Faraday.default_adapter
         end
       end
