@@ -41,10 +41,7 @@ module Apikit
 
     def sawyer_options
       {}.tap do |opts|
-        opts[:faraday] = Faraday.new do |conn|
-          config.faraday_options.call(conn) if config.faraday_options
-          conn.adapter Faraday.default_adapter
-        end
+        opts[:faraday] = config.faraday if config.faraday
       end
     end
 

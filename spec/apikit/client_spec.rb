@@ -50,7 +50,7 @@ describe Apikit::Client do
   describe "options[:config]" do
     let(:config) do
       Apikit::Config.new.tap do |config|
-        config.config_faraday do |conn|
+        config.faraday = Faraday.new do |conn|
           conn.use Faraday::Response::RaiseError
         end
       end
