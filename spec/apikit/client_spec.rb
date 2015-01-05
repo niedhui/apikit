@@ -61,9 +61,22 @@ describe Apikit::Client do
       stub_get = stub_ping.to_return(json_response({ok: false}, {status: [500, "Internal Server Error"]}))
       expect { result = client.get(path) }.to raise_error(Faraday::ClientError)
     end
-
   end
 
+  describe "client config using block" do
+    let(:client) do
+      Apikit::Client.new(api_endpoint) do |config|
+        config.faraday = Faraday.new do |conn|
+          conn.use Faraday::Response::RaiseError
+        end
+      end
+    end
 
+    it "should use the raise error middleware" do
+      stub_get = stub_ping.to_return(json_response({ok: false}, {status: [500, "Internal Server Error"]}))
+      expect { result = client.get(path) }.to raise_error(Faraday::ClientError)
+    end
+
+  end
 
 end

@@ -3,9 +3,10 @@ module Apikit
     attr_accessor :api_endpoint, :config
 
     # options:
-    def initialize(api_endpoint, config = Apikit.config )
+    def initialize(api_endpoint, config = nil)
       @api_endpoint = api_endpoint
-      @config = config
+      @config = (config || Configuration.new)
+      yield @config if block_given?
     end
 
     # options:
