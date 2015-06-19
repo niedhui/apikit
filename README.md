@@ -18,6 +18,17 @@ Or install it yourself as:
 
     $ gem install apikit
 
+
+```ruby
+  @client = Apikit::Client.new(endpoint) do |config|
+    config.faraday = Faraday.new do |conn|
+      conn.request :url_encoded
+      # conn.use DebuggerHandler, self
+      conn.adapter Faraday.default_adapter
+    end
+  end
+
+```
 ## Usage
 
 TODO: Write usage instructions here

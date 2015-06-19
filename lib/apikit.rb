@@ -11,7 +11,7 @@ module Apikit
     def configuration
       @configuration ||= Configuration.new
     end
-    alias config configuration
+    alias_method :config, :configuration
 
     def reset_config
       @configuration = Configuration.new
@@ -20,7 +20,5 @@ module Apikit
     def configure
       yield configuration
     end
-
   end
-
 end

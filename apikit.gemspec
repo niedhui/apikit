@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Apikit::VERSION
   spec.authors       = ["niedhui"]
   spec.email         = ["niedhui@gmail.com"]
-  spec.summary       = %q{try to implement an api consumer}
+  spec.summary       = 'try to implement an api consumer'
   spec.homepage      = ""
   spec.license       = "MIT"
 

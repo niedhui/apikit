@@ -1,6 +1,7 @@
 module Apikit
   class Client
     attr_accessor :api_endpoint, :config
+    attr_reader :last_response
 
     # options:
     def initialize(api_endpoint, config = nil)
@@ -11,24 +12,29 @@ module Apikit
 
     # options:
     #   query:
+    # @return [Sawyer::Resource]
     def get(path, options = {})
       request :get, path, options
     end
 
+    # @return [Sawyer::Resource]
     def post(path, options = {})
       request :post, path, options
     end
 
+    # @return [Sawyer::Resource]
     def put(path, options = {})
       request :put, path, options
     end
 
+    # @return [Sawyer::Resource]
     def delete(path, options = {})
       request :delete, path, options
     end
 
+    # @return [Sawyer::Resource]
     def request(method, path, options = {})
-      response = agent.call(method, URI::Parser.new.escape(path.to_s), nil, options)
+      @last_response = response = agent.call(method, URI::Parser.new.escape(path.to_s), nil, options)
       response.data
     end
 
@@ -45,8 +51,5 @@ module Apikit
         opts[:faraday] = config.faraday if config.faraday
       end
     end
-
   end
 end
-
-
