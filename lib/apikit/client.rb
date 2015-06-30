@@ -1,5 +1,6 @@
 module Apikit
   class Client
+    include Wisper::Publisher
     attr_accessor :api_endpoint, :config
     attr_reader :last_response
 
@@ -14,28 +15,30 @@ module Apikit
     #   query:
     # @return [Sawyer::Resource]
     def get(path, options = {})
-      request :get, path, options
+      request :get, path, nil, options
     end
 
     # @return [Sawyer::Resource]
-    def post(path, options = {})
-      request :post, path, options
+    def post(path, data, options = {})
+      request :post, path, data, options
     end
 
     # @return [Sawyer::Resource]
-    def put(path, options = {})
-      request :put, path, options
+    def put(path, data, options = {})
+      request :put, path, data, options
     end
 
     # @return [Sawyer::Resource]
     def delete(path, options = {})
-      request :delete, path, options
+      request :delete, path, nil, options
     end
 
     # @return [Sawyer::Resource]
-    def request(method, path, options = {})
-      @last_response = response = agent.call(method, URI::Parser.new.escape(path.to_s), nil, options)
-      response.data
+    def request(method, path, data, options = {})
+      @last_response = response = agent.call(method, URI::Parser.new.escape(path.to_s), data, options)
+      response.data.tap do |data|
+        broadcast :request_fail, response.status, data, response unless [200, 201].include?(response.status)
+      end
     end
 
     private

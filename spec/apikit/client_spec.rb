@@ -40,7 +40,7 @@ describe Apikit::Client do
   describe ".post" do
     it "handle query parameters" do
       stub_request(:post, api_endpoint + path).with(query: { timeout: 5 }).to_return(body: { ok: true }.to_json)
-      result = client.post(path, query: { timeout: 5 })
+      result = client.post(path, nil, query: { timeout: 5 })
       expect(result).to eq("{\"ok\":true}")
     end
   end
