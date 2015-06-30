@@ -1,4 +1,5 @@
 require 'sawyer'
+require 'wisper'
 
 require "apikit/version"
 require "apikit/configuration"
