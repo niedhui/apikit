@@ -41,16 +41,15 @@ module Apikit
       data = options.delete(:data)
       @last_response = response = agent.call(method, URI::Parser.new.escape(path.to_s), data, options)
       response.data.tap do |data|
-        broadcast :request_fail, response.status, data, response unless [200, 201].include?(response.status)
+        evt = [200, 201].include?(response.status) ? :request_success : :request_fail
+        broadcast evt, response.status, data, response
       end
     end
 
     private
 
     def agent
-      @agent ||= Sawyer::Agent.new(api_endpoint, sawyer_options) do |http|
-        http.headers[:content_type] = "application/json"
-      end
+      agent ||= config.agent_factory.call(api_endpoint, sawyer_options)
     end
 
     def sawyer_options

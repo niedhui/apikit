@@ -1,9 +1,10 @@
 module Apikit
   class Configuration
     attr_reader :faraday
-    attr_accessor :faraday
+    attr_accessor :agent_factory
 
     def initialize
+      @agent_factory = default_agent_factory
     end
 
     # Faraday default stack is
@@ -19,6 +20,14 @@ module Apikit
 
     def self.default
       new
+    end
+
+    def default_agent_factory
+      ->(api_endpoint, sawyer_options) {
+        Sawyer::Agent.new(api_endpoint, sawyer_options) do |http|
+          http.headers[:content_type] = "application/json"
+        end
+      }
     end
   end
   Config = Configuration
